@@ -100,6 +100,13 @@
             pointer-events: none;
         }
 
+        .hero h1,
+        .hero p,
+        .hero .scroll-hint {
+            position: relative;
+            z-index: 1;
+        }
+
         .hero h1 {
             font-size: clamp(3rem, 8vw, 6rem);
             font-weight: 800;
@@ -407,6 +414,18 @@
             letter-spacing: -1px;
         }
 
+        /* TRUCHET CANVAS */
+        #truchet-canvas {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            opacity: 0.28;
+            z-index: 0;
+        }
+
         /* LOGO-ONLY PROJECTS */
         .logo-projects {
             padding: 4rem 2rem 6rem;
@@ -550,6 +569,7 @@
 
     <!-- HERO -->
     <section class="hero">
+        <canvas id="truchet-canvas"></canvas>
         <h1>
             <span>Jon Toews</span>
             Creative Director
@@ -762,6 +782,114 @@
                 player.src = tab.dataset.src;
             });
         });
+
+        // Truchet tile animation
+        (function() {
+            const canvas = document.getElementById('truchet-canvas');
+            const ctx = canvas.getContext('2d');
+            const TILE = 60;
+            let cols, rows, tiles;
+            let lastTime = 0;
+
+            // Color palette: accent pink, purple, cyan, white
+            const COLORS = ['#ff1f71', '#c026d3', '#7858ff', '#06b6d4', '#ffffff'];
+
+            function resize() {
+                canvas.width = canvas.offsetWidth;
+                canvas.height = canvas.offsetHeight;
+                cols = Math.ceil(canvas.width / TILE) + 1;
+                rows = Math.ceil(canvas.height / TILE) + 1;
+                tiles = [];
+                for (let r = 0; r < rows; r++) {
+                    tiles[r] = [];
+                    for (let c = 0; c < cols; c++) {
+                        const colorIdx = Math.floor(Math.random() * COLORS.length);
+                        const nextColorIdx = (colorIdx + 1 + Math.floor(Math.random() * (COLORS.length - 1))) % COLORS.length;
+                        tiles[r][c] = {
+                            angle: Math.random() < 0.5 ? 0 : Math.PI / 2,
+                            target: Math.random() < 0.5 ? 0 : Math.PI / 2,
+                            progress: Math.random(),
+                            flipProgress: 0,
+                            flipping: false,
+                            speed: 0.0004 + Math.random() * 0.0006,
+                            colorIdx,
+                            nextColorIdx,
+                            delay: Math.random() * 5000,
+                            lineWidth: 1 + Math.random() * 2,
+                        };
+                    }
+                }
+            }
+
+            function lerpColor(a, b, t) {
+                const ah = parseInt(a.slice(1), 16);
+                const bh = parseInt(b.slice(1), 16);
+                const ar = (ah >> 16) & 0xff, ag = (ah >> 8) & 0xff, ab = ah & 0xff;
+                const br = (bh >> 16) & 0xff, bg = (bh >> 8) & 0xff, bb = bh & 0xff;
+                const rr = Math.round(ar + (br - ar) * t);
+                const rg = Math.round(ag + (bg - ag) * t);
+                const rb = Math.round(ab + (bb - ab) * t);
+                return `rgb(${rr},${rg},${rb})`;
+            }
+
+            function drawTile(x, y, angle, color, lw) {
+                ctx.save();
+                ctx.translate(x + TILE / 2, y + TILE / 2);
+                ctx.rotate(angle);
+                ctx.strokeStyle = color;
+                ctx.lineWidth = lw;
+                ctx.lineCap = 'round';
+                ctx.beginPath();
+                ctx.arc(-TILE / 2, -TILE / 2, TILE / 2, 0, Math.PI / 2);
+                ctx.stroke();
+                ctx.beginPath();
+                ctx.arc(TILE / 2, TILE / 2, TILE / 2, Math.PI, Math.PI * 1.5);
+                ctx.stroke();
+                ctx.restore();
+            }
+
+            function easeInOut(t) {
+                return t < 0.5 ? 2 * t * t : -1 + (4 - 2 * t) * t;
+            }
+
+            function draw(ts) {
+                const dt = Math.min(ts - lastTime, 50); // cap dt to avoid jumps
+                lastTime = ts;
+
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+                for (let r = 0; r < rows; r++) {
+                    for (let c = 0; c < cols; c++) {
+                        const t = tiles[r][c];
+
+                        if (ts > t.delay) {
+                            t.progress += t.speed * dt;
+                            if (t.progress >= 1) {
+                                t.progress = 0;
+                                t.angle = t.target;
+                                t.target = t.angle === 0 ? Math.PI / 2 : 0;
+                                // shift to next color
+                                t.colorIdx = t.nextColorIdx;
+                                t.nextColorIdx = (t.colorIdx + 1 + Math.floor(Math.random() * (COLORS.length - 1))) % COLORS.length;
+                                t.delay = ts + 500 + Math.random() * 6000;
+                            }
+                        }
+
+                        const eased = easeInOut(Math.min(t.progress, 1));
+                        const displayAngle = t.angle + (t.target - t.angle) * eased;
+                        const color = lerpColor(COLORS[t.colorIdx], COLORS[t.nextColorIdx], eased);
+
+                        drawTile(c * TILE, r * TILE, displayAngle, color, t.lineWidth);
+                    }
+                }
+
+                requestAnimationFrame(draw);
+            }
+
+            resize();
+            window.addEventListener('resize', resize);
+            requestAnimationFrame((ts) => { lastTime = ts; requestAnimationFrame(draw); });
+        })();
 
         // Smooth nav background on scroll
         window.addEventListener('scroll', () => {
