@@ -240,6 +240,25 @@
             fill: currentColor;
         }
 
+        .project-link-btn {
+            display: inline-block;
+            margin-top: 0.5rem;
+            padding: 0.4rem 1rem;
+            border: 1px solid var(--border);
+            border-radius: 100px;
+            color: var(--muted);
+            text-decoration: none;
+            font-size: 0.8rem;
+            font-weight: 500;
+            letter-spacing: 0.02em;
+            transition: color 0.2s, border-color 0.2s;
+        }
+
+        .project-link-btn:hover {
+            color: var(--text);
+            border-color: var(--text);
+        }
+
         .project-media {
             border-radius: 16px;
             overflow: hidden;
@@ -685,6 +704,7 @@
                 <div class="project-client">Klick Health</div>
                 <h2 class="project-title">Klick Brand &amp; Web</h2>
                 <p class="project-desc">As creative director for the Klick.com redesign, I led the evolution of the site into a bold, immersive experience that reflects Klick's unique fusion of science, strategy, and creativity. I oversaw visual design, UX, and interactive storytelling to create a site that's both striking and strategically aligned with Klick's human-centric approach to healthcare.</p>
+                <a href="https://www.klick.com/" target="_blank" rel="noopener" class="project-link-btn">Visit Klick.com ↗</a>
             </div>
             <div class="project-media" style="cursor: pointer;" onclick="window.open('https://www.klick.com/','_blank')">
                 <div class="klick-hero-img">
