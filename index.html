@@ -329,14 +329,15 @@
         }
 
         .project--portrait .project-media {
-            aspect-ratio: auto;
+            aspect-ratio: unset !important;
             width: 380px;
-            height: 680px;
+            height: 680px !important;
             max-width: 100%;
             margin: 0 auto;
             position: relative;
             display: flex;
             flex-direction: column;
+            overflow: visible;
         }
 
         .project--portrait .video-selector {
@@ -360,6 +361,7 @@
             width: 100%;
             height: 100%;
             border: none;
+            object-fit: contain;
         }
 
         .project--portrait .video-tabs {
