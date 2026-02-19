@@ -339,7 +339,7 @@
         .project--portrait {
             grid-template-columns: 1fr;
             text-align: center;
-            max-width: 900px;
+            max-width: 960px;
             margin: 0 auto;
         }
 
@@ -348,44 +348,58 @@
         }
 
         .project--portrait .project-media {
-            aspect-ratio: unset !important;
-            width: 380px;
-            max-width: 100%;
-            height: auto !important;
-            margin: 0 auto;
-            position: static !important;
-            display: block;
-            overflow: hidden;
-        }
-
-        .project--portrait .video-selector {
+            aspect-ratio: unset;
             position: static;
-            width: 100%;
-            display: flex;
-            flex-direction: column;
-        }
-
-        .project--portrait .main-video {
-            /* 9:16 aspect ratio for portrait video */
-            position: relative;
-            width: 100%;
-            padding-bottom: 177.78%;
-            height: 0;
-            overflow: hidden;
-        }
-
-        .project--portrait .main-video iframe {
-            position: absolute !important;
-            top: 50%;
-            left: 50%;
-            width: 130% !important;
-            height: 130% !important;
-            transform: translate(-50%, -50%);
+            background: none;
             border: none;
+            border-radius: 0;
+            overflow: visible;
+            padding: 0;
         }
 
-        .project--portrait .video-tabs {
-            flex-shrink: 0;
+        .mdd-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 12px;
+        }
+
+        .mdd-grid-item {
+            position: relative;
+            border-radius: 12px;
+            overflow: hidden;
+            background: #111;
+            aspect-ratio: 9 / 16;
+        }
+
+        .mdd-grid-item video {
+            position: absolute;
+            top: 0; left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+        }
+
+        .mdd-label {
+            position: absolute;
+            bottom: 8px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(0,0,0,0.55);
+            color: #fff;
+            font-size: 0.65rem;
+            font-weight: 600;
+            letter-spacing: 0.05em;
+            padding: 3px 10px;
+            border-radius: 100px;
+            pointer-events: none;
+            white-space: nowrap;
+        }
+
+        @media (max-width: 600px) {
+            .mdd-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
         }
 
         /* KLICK BRAND CSS IMAGE */
@@ -685,15 +699,30 @@
                 </div>
             </div>
             <div class="project-media">
-                <div class="video-selector" id="axsome-selector">
-                    <div class="main-video">
-                        <iframe id="axsome-player" src="https://drive.google.com/file/d/1-REO--cy3fn6KC5QTQO7aPP0n2NXWnOv/preview" allow="autoplay" loading="lazy"></iframe>
+                <div class="mdd-grid">
+                    <div class="mdd-grid-item">
+                        <video autoplay loop muted playsinline>
+                            <source src="assets/videos/mdd-ad1.mp4" type="video/mp4">
+                        </video>
+                        <span class="mdd-label">Ad 1</span>
                     </div>
-                    <div class="video-tabs">
-                        <button class="video-tab active" data-src="https://drive.google.com/file/d/1-REO--cy3fn6KC5QTQO7aPP0n2NXWnOv/preview">Ad 1</button>
-                        <button class="video-tab" data-src="https://drive.google.com/file/d/1mLqV_fJctN8nPo4lpQkiTaukODKBAwxN/preview">Ad 2</button>
-                        <button class="video-tab" data-src="https://drive.google.com/file/d/1Fblaf38zr26gpVfLg6fF_qqtqUCF-4wa/preview">Ad 3</button>
-                        <button class="video-tab" data-src="https://drive.google.com/file/d/1oKlIhlv6Md79EFdZ5ucensSifnYz2dFf/preview">Ad 4</button>
+                    <div class="mdd-grid-item">
+                        <video autoplay loop muted playsinline>
+                            <source src="assets/videos/mdd-ad2.mp4" type="video/mp4">
+                        </video>
+                        <span class="mdd-label">Ad 2</span>
+                    </div>
+                    <div class="mdd-grid-item">
+                        <video autoplay loop muted playsinline>
+                            <source src="assets/videos/mdd-ad3.mp4" type="video/mp4">
+                        </video>
+                        <span class="mdd-label">Ad 3</span>
+                    </div>
+                    <div class="mdd-grid-item">
+                        <video autoplay loop muted playsinline>
+                            <source src="assets/videos/mdd-ad4.mp4" type="video/mp4">
+                        </video>
+                        <span class="mdd-label">Ad 4</span>
                     </div>
                 </div>
             </div>
@@ -793,17 +822,6 @@
 
         document.querySelectorAll('.project, .logo-card').forEach(el => {
             observer.observe(el);
-        });
-
-        // Axsome video tab switcher
-        document.querySelectorAll('.video-tab').forEach(tab => {
-            tab.addEventListener('click', () => {
-                const selector = tab.closest('.video-selector');
-                const player = selector.querySelector('.main-video iframe');
-                selector.querySelectorAll('.video-tab').forEach(t => t.classList.remove('active'));
-                tab.classList.add('active');
-                player.src = tab.dataset.src;
-            });
         });
 
         // Truchet tile animation
