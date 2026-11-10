@@ -1,944 +1,154 @@
-<!DOCTYPE html>
-<html lang="en">
+<!doctype html>
+<html lang="en-CA">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Jon Toews — Creative Director</title>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        :root {
-            --bg: #0a0a0a;
-            --text: #f5f5f5;
-            --muted: #888;
-            --accent: #ff1f71;
-            --card-bg: #141414;
-            --border: #222;
-        }
-
-        html {
-            scroll-behavior: smooth;
-        }
-
-        body {
-            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
-            background: var(--bg);
-            color: var(--text);
-            line-height: 1.6;
-            -webkit-font-smoothing: antialiased;
-        }
-
-        /* NAV */
-        nav {
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            z-index: 100;
-            padding: 1.25rem 2rem;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            backdrop-filter: blur(20px);
-            background: rgba(10,10,10,0.8);
-            border-bottom: 1px solid var(--border);
-        }
-
-        nav .logo {
-            font-weight: 700;
-            font-size: 1.1rem;
-            letter-spacing: -0.5px;
-        }
-
-        nav .nav-links {
-            display: flex;
-            gap: 2rem;
-            list-style: none;
-        }
-
-        nav .nav-links a {
-            color: var(--muted);
-            text-decoration: none;
-            font-size: 0.85rem;
-            font-weight: 500;
-            transition: color 0.3s;
-            letter-spacing: 0.5px;
-            text-transform: uppercase;
-        }
-
-        nav .nav-links a:hover {
-            color: var(--text);
-        }
-
-        /* HERO */
-        .hero {
-            min-height: 100vh;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            text-align: center;
-            padding: 6rem 2rem 4rem;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .hero::before {
-            content: '';
-            position: absolute;
-            width: 600px;
-            height: 600px;
-            background: radial-gradient(circle, rgba(255,31,113,0.15) 0%, transparent 70%);
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            pointer-events: none;
-        }
-
-        .hero h1,
-        .hero p,
-        .hero .scroll-hint {
-            position: relative;
-            z-index: 1;
-        }
-
-        .hero h1 {
-            font-size: clamp(3rem, 8vw, 6rem);
-            font-weight: 800;
-            letter-spacing: -3px;
-            line-height: 1.05;
-            margin-bottom: 1.5rem;
-        }
-
-        .hero h1 span {
-            display: block;
-            color: #ff1f71;
-        }
-
-        .hero p {
-            font-size: 1.25rem;
-            color: #bbb;
-            max-width: 500px;
-            font-weight: 400;
-        }
-
-        .hero .scroll-hint {
-            position: absolute;
-            bottom: 3rem;
-            animation: bounce 2s infinite;
-        }
-
-        .hero .scroll-hint svg {
-            width: 24px;
-            height: 24px;
-            stroke: var(--muted);
-        }
-
-        @keyframes bounce {
-            0%, 100% { transform: translateY(0); }
-            50% { transform: translateY(8px); }
-        }
-
-        /* SECTIONS */
-        section {
-            padding: 6rem 2rem;
-            max-width: 1200px;
-            margin: 0 auto;
-        }
-
-        .section-label {
-            font-size: 0.75rem;
-            text-transform: uppercase;
-            letter-spacing: 3px;
-            color: var(--accent);
-            font-weight: 600;
-            margin-bottom: 1rem;
-        }
-
-        /* PROJECT CARDS */
-        .projects {
-            display: flex;
-            flex-direction: column;
-            gap: 8rem;
-            padding: 4rem 2rem 6rem;
-            max-width: 1200px;
-            margin: 0 auto;
-        }
-
-        .project {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 4rem;
-            align-items: center;
-            opacity: 0;
-            transform: translateY(40px);
-            transition: opacity 0.8s ease, transform 0.8s ease;
-        }
-
-        .project.visible {
-            opacity: 1;
-            transform: translateY(0);
-        }
-
-        .project:nth-child(even):not(.project--portrait) {
-            direction: rtl;
-        }
-
-        .project:nth-child(even):not(.project--portrait) > * {
-            direction: ltr;
-        }
-
-        .project-info {
-            display: flex;
-            flex-direction: column;
-            gap: 1rem;
-        }
-
-        .project-client {
-            font-size: 0.75rem;
-            text-transform: uppercase;
-            letter-spacing: 3px;
-            color: var(--accent);
-            font-weight: 600;
-        }
-
-        .project-title {
-            font-size: 2.2rem;
-            font-weight: 700;
-            letter-spacing: -1px;
-            line-height: 1.2;
-        }
-
-        .project-desc {
-            color: var(--muted);
-            font-size: 0.95rem;
-            line-height: 1.7;
-        }
-
-        .project-awards {
-            display: inline-flex;
-            align-items: center;
-            gap: 0.5rem;
-            padding: 0.5rem 1rem;
-            background: rgba(255,31,113,0.1);
-            border: 1px solid rgba(255,31,113,0.2);
-            border-radius: 100px;
-            font-size: 0.8rem;
-            color: #ff6ba0;
-            font-weight: 500;
-            width: fit-content;
-        }
-
-        .project-awards svg {
-            width: 14px;
-            height: 14px;
-            fill: currentColor;
-        }
-
-        .project-link-btn {
-            display: inline-block;
-            margin-top: 0.5rem;
-            padding: 0.4rem 1rem;
-            border: 1px solid var(--border);
-            border-radius: 100px;
-            color: var(--muted);
-            text-decoration: none;
-            font-size: 0.8rem;
-            font-weight: 500;
-            letter-spacing: 0.02em;
-            transition: color 0.2s, border-color 0.2s;
-        }
-
-        .project-link-btn:hover {
-            color: var(--text);
-            border-color: var(--text);
-        }
-
-        .project-media {
-            border-radius: 16px;
-            overflow: hidden;
-            background: var(--card-bg);
-            aspect-ratio: 16/10;
-            position: relative;
-            border: 1px solid var(--border);
-        }
-
-        .project-media video,
-        .project-media iframe,
-        .project-media img {
-            width: 100%;
-            height: 100%;
-            border: none;
-            position: absolute;
-            top: 0;
-            left: 0;
-            object-fit: cover;
-        }
-
-        /* VIDEO SELECTOR (Axsome) */
-        .video-selector {
-            width: 100%;
-            height: 100%;
-            display: flex;
-            flex-direction: column;
-        }
-
-        .video-selector .main-video {
-            flex: 1;
-            position: relative;
-            min-height: 0;
-        }
-
-        .video-selector .main-video iframe {
-            width: 100%;
-            height: 100%;
-            border: none;
-            position: absolute;
-            top: 0;
-            left: 0;
-        }
-
-        .video-selector .video-tabs {
-            display: flex;
-            gap: 2px;
-            background: #111;
-            padding: 2px;
-        }
-
-        .video-selector .video-tab {
-            flex: 1;
-            padding: 0.6rem 0.5rem;
-            background: #1a1a1a;
-            border: none;
-            color: var(--muted);
-            font-family: 'Inter', sans-serif;
-            font-size: 0.7rem;
-            font-weight: 500;
-            cursor: pointer;
-            transition: all 0.3s;
-            text-align: center;
-            letter-spacing: 0.3px;
-        }
-
-        .video-selector .video-tab:hover {
-            background: #222;
-            color: var(--text);
-        }
-
-        .video-selector .video-tab.active {
-            background: var(--accent);
-            color: white;
-        }
-
-        /* PORTRAIT PROJECT (Axsome MDD) */
-        .project--portrait {
-            grid-template-columns: 1fr;
-            text-align: center;
-            max-width: 960px;
-            margin: 0 auto;
-        }
-
-        .project--portrait .project-info {
-            align-items: center;
-        }
-
-        .project--portrait .project-media {
-            aspect-ratio: unset;
-            position: static;
-            background: none;
-            border: none;
-            border-radius: 0;
-            overflow: visible;
-            padding: 0;
-        }
-
-        .mdd-grid {
-            display: grid;
-            grid-template-columns: repeat(4, 1fr);
-            gap: 12px;
-        }
-
-        .mdd-grid-item {
-            position: relative;
-            border-radius: 12px;
-            overflow: hidden;
-            background: #111;
-            aspect-ratio: 9 / 16;
-        }
-
-        .mdd-grid-item video {
-            position: absolute;
-            top: 0; left: 0;
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-            display: block;
-        }
-
-        .mdd-label {
-            position: absolute;
-            bottom: 8px;
-            left: 50%;
-            transform: translateX(-50%);
-            background: rgba(0,0,0,0.55);
-            color: #fff;
-            font-size: 0.65rem;
-            font-weight: 600;
-            letter-spacing: 0.05em;
-            padding: 3px 10px;
-            border-radius: 100px;
-            pointer-events: none;
-            white-space: nowrap;
-        }
-
-        @media (max-width: 600px) {
-            .mdd-grid {
-                grid-template-columns: repeat(2, 1fr);
-            }
-        }
-
-        /* KLICK BRAND CSS IMAGE */
-        .klick-hero-img {
-            width: 100%;
-            height: 100%;
-            background: #ffffff;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            position: absolute;
-            top: 0;
-            left: 0;
-        }
-
-        .klick-hero-img .blue-circle {
-            width: 70%;
-            aspect-ratio: 1;
-            border-radius: 50%;
-            background: #0046ff;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            position: relative;
-        }
-
-        .klick-hero-img .blue-circle .tagline {
-            color: #000;
-            font-family: 'Inter', sans-serif;
-            font-weight: 900;
-            font-size: clamp(0.9rem, 2.5vw, 1.8rem);
-            text-align: center;
-            line-height: 1.15;
-            padding: 1rem;
-            position: relative;
-            z-index: 1;
-        }
-
-        .klick-hero-img .klick-logo {
-            position: absolute;
-            top: 12px;
-            left: 14px;
-            font-family: monospace;
-            font-weight: 900;
-            font-size: 0.7rem;
-            color: #000;
-            line-height: 1;
-            letter-spacing: -1px;
-        }
-
-        /* TRUCHET CANVAS */
-        #truchet-canvas {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            pointer-events: none;
-            opacity: 0.28;
-            z-index: 0;
-        }
-
-        /* LOGO-ONLY PROJECTS */
-        .logo-projects {
-            padding: 4rem 2rem 6rem;
-            max-width: 1200px;
-            margin: 0 auto;
-        }
-
-        .logo-projects h2 {
-            font-size: 2rem;
-            font-weight: 700;
-            letter-spacing: -1px;
-            margin-bottom: 3rem;
-            text-align: center;
-        }
-
-        .logo-grid {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 2rem;
-        }
-
-        .logo-card {
-            background: var(--card-bg);
-            border: 1px solid var(--border);
-            border-radius: 16px;
-            padding: 2.5rem 2rem;
-            display: flex;
-            flex-direction: column;
-            gap: 1.25rem;
-            opacity: 0;
-            transform: translateY(30px);
-            transition: opacity 0.8s ease, transform 0.8s ease, border-color 0.3s;
-        }
-
-        .logo-card.visible {
-            opacity: 1;
-            transform: translateY(0);
-        }
-
-        .logo-card:hover {
-            border-color: var(--accent);
-            transform: translateY(-4px) !important;
-        }
-
-        .logo-card .brand-icon {
-            font-size: 2rem;
-            font-weight: 800;
-            letter-spacing: -1px;
-        }
-
-        .logo-card h3 {
-            font-size: 1.3rem;
-            font-weight: 600;
-        }
-
-        .logo-card p {
-            color: var(--muted);
-            font-size: 0.9rem;
-            line-height: 1.6;
-        }
-
-        /* CONTACT */
-        .contact {
-            text-align: center;
-            padding: 8rem 2rem;
-            max-width: 600px;
-            margin: 0 auto;
-        }
-
-        .contact h2 {
-            font-size: clamp(2rem, 5vw, 3rem);
-            font-weight: 700;
-            letter-spacing: -1px;
-            margin-bottom: 1.5rem;
-        }
-
-        .contact p {
-            color: var(--muted);
-            margin-bottom: 2rem;
-            font-size: 1.1rem;
-        }
-
-        .contact a.email-link {
-            display: inline-block;
-            padding: 1rem 2.5rem;
-            background: var(--accent);
-            color: white;
-            text-decoration: none;
-            border-radius: 100px;
-            font-weight: 600;
-            font-size: 1rem;
-            transition: transform 0.3s, box-shadow 0.3s;
-        }
-
-        .contact a.email-link:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 8px 30px rgba(255,31,113,0.3);
-        }
-
-        /* FOOTER */
-        footer {
-            text-align: center;
-            padding: 2rem;
-            border-top: 1px solid var(--border);
-            color: var(--muted);
-            font-size: 0.8rem;
-        }
-
-        /* RESPONSIVE */
-        @media (max-width: 768px) {
-            nav .nav-links { gap: 1rem; }
-            nav .nav-links a { font-size: 0.75rem; }
-            .project { grid-template-columns: 1fr; gap: 2rem; }
-            .project:nth-child(even) { direction: ltr; }
-            .logo-grid { grid-template-columns: 1fr; }
-            .projects { gap: 5rem; }
-        }
-
-        /* Divider */
-        .divider {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 0 2rem;
-        }
-
-        .divider hr {
-            border: none;
-            border-top: 1px solid var(--border);
-        }
-    </style>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Selected work — Jon Toews</title>
+<meta name="description" content="Professional portfolio of Jon Toews, creative director. Shared on request.">
+<meta name="robots" content="noindex, nofollow, noarchive">
+<meta name="theme-color" content="#f2f1ee">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Jon Toews">
+<meta property="og:title" content="Selected work — Jon Toews">
+<meta property="og:description" content="Professional portfolio of Jon Toews, creative director. Shared on request.">
+<meta property="og:image" content="https://jontoews.com/assets/share.jpg">
+<meta property="og:image:width" content="1200"><meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Host+Grotesk:wght@400;500;600;700;800&display=swap">
+<script>/* moiré: a different starting angle, position and orientation on every page load */
+(() => { const r = document.documentElement.style, R = (a, b) => a + Math.random() * (b - a);
+  r.setProperty("--moire-x", R(43, 61).toFixed(1) + "%");
+  r.setProperty("--moire-delay", -R(0, 900).toFixed(1) + "s");
+  r.setProperty("--moire-flip", Math.random() < 0.5 ? -1 : 1);
+  r.setProperty("--moire-dx", R(-18, 18).toFixed(1) + "vmax");
+  r.setProperty("--moire-dy", R(-18, 18).toFixed(1) + "vmax"); })();</script>
+<link rel="stylesheet" href="../assets/css/site.css?v=42326d51">
+<link rel="icon" href="../assets/favicon.svg" type="image/svg+xml">
 </head>
 <body>
+<div class="moire" aria-hidden="true"></div>
+<div class="cols" aria-hidden="true"><div class="cols__inner"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></div></div>
+<header class="wrap masthead">
+  <div class="a"><span class="tag">Human:</span><p class="meta"><a class="stretch" href="../" style="text-decoration:none">Jon Toews</a></p></div>
+  <div class="b"><span class="tag">Practice:</span><p class="meta"><span class="stretch">Creative direction · Technology</span></p></div>
+  <div class="c"><span class="tag">File:</span><p class="meta"><span class="stretch">Shared on request</span></p></div>
+</header>
+<main>
+<section class="wrap hero" aria-labelledby="h">
+  <div class="hero__meta">
+    <p class="label accent">Selected work</p>
+    <p class="label muted">Professional portfolio</p>
+    <p class="label muted">2026</p>
+  </div>
+  <h1 class="headline" id="h" style="--fit:7.4;--cap:190px"><span class="l">Ideas that</span> <span class="l">had to work.</span></h1>
+</section>
+<section class="wrap strip" aria-label="Summary">
+  <div class="a"><p class="label accent">Experience</p><p class="meta">Intercept · Klick Health · Public Inc. · Critical Mass · Bensimon Byrne</p></div>
+  <div class="b"><p class="label accent">Recognition</p><p class="meta">Cannes Lions · Clio · New York Festivals · Communication Arts · Creative Floor</p></div>
+  <div class="c"><p class="label accent">Curriculum vitae</p><a class="chip" href="cv/Jon-Toews-CV.pdf">Download CV · PDF</a> <a class="label" href="cv/Jon-Toews-CV-ATS.pdf" style="display:block;width:max-content;margin-top:10px">Plain-text version →</a></div>
+</section>
 
-    <!-- NAV -->
-    <nav>
-        <div class="logo"></div>
-        <ul class="nav-links">
-            <li><a href="/experiments/">Experiments</a></li>
-            <li><a href="#contact">Contact</a></li>
-        </ul>
-    </nav>
+<section class="section" aria-label="Case studies" style="padding-top:40px">
+<article class="wrap case" aria-labelledby="case-1">
+  <div class="case__text">
+    <p class="label accent">UNMAS × Critical Mass</p>
+    <h3 class="title" id="case-1">Sweeper</h3>
+    <p class="label muted">Cannes Lions · New York Festivals · Communication Arts</p>
+    <p class="body">A virtual minefield at the New Museum in New York. The Sweeper app used iBeacon technology to trigger audio explosions on visitors’ phones as they crossed the exhibit, followed by stories of the damage landmines cause and a call to donate to UNMAS. Landmines kill or maim about ten people a day in more than 60 countries; this made it personal.</p>
+  </div>
+  <div class="case__media"><video controls preload="none" playsinline poster="assets/images/sweeper-poster.jpg"><source src="assets/videos/sweeper.mp4" type="video/mp4"></video></div>
+</article>
+<article class="wrap case" aria-labelledby="case-2">
+  <div class="case__text">
+    <p class="label accent">House of Anansi × Critical Mass</p>
+    <h3 class="title" id="case-2">Massey Lectures App</h3>
+    <p class="label muted">Cannes Lion, Design</p>
+    <p class="body">An iPad platform for more than 50 years of the Massey Lectures: nearly 200 hours of material, each e-book paired with its five-hour audio lecture series, contextual content and author interviews, plus in-line questions and comments that turned reading into a conversation.</p>
+  </div>
+  <div class="case__media"><video controls preload="none" playsinline poster="assets/images/massey-poster.jpg"><source src="assets/videos/massey-lectures.mp4" type="video/mp4"></video></div>
+</article>
+<article class="wrap case" aria-labelledby="case-3">
+  <div class="case__text">
+    <p class="label accent">City of Toronto · Centre for Independent Living</p>
+    <h3 class="title" id="case-3">The Inaccessible Transit Shelter</h3>
+    <p class="label muted">Communication Arts · Canadian Marketing</p>
+    <p class="body">A transit shelter sealed entirely in glass so nobody could get inside. The headline: “Feeling left out? Over 400,000 Torontonians with disabilities do, too.” A call to action led to a site with ways to make Toronto more accessible.</p>
+  </div>
+  <div class="case__media"><img src="assets/images/transit-shelter-new.jpg" alt="A Toronto transit shelter fully enclosed in glass" loading="lazy" width="533" height="372"></div>
+</article>
+<article class="wrap case" aria-labelledby="case-4">
+  <div class="case__text">
+    <p class="label accent">Trillium Gift of Life Network</p>
+    <h3 class="title" id="case-4">Be A Donor</h3>
+    
+    <p class="body">A hyper-personal television spot that drove the direct digital campaign to sign up and register as an organ donor online.</p>
+  </div>
+  <div class="case__media"><video controls preload="none" playsinline poster="assets/images/be-a-donor-poster.jpg"><source src="assets/videos/be-a-donor.mp4" type="video/mp4"></video></div>
+</article>
+<article class="wrap case" aria-labelledby="case-5">
+  <div class="case__text">
+    <p class="label accent">Axsome Therapeutics × Klick Health</p>
+    <h3 class="title" id="case-5">MDD Awareness</h3>
+    <p class="label muted">New York Festivals · Communication Arts · Creative Floor</p>
+    <p class="body">Disease-state awareness for major depressive disorder. Social and targeted digital work that broke through with eye-popping animation and maximalist illustration, captured direct sign-ups, and delivered patient materials and launch information for a new Axsome therapy on approval.</p>
+  </div>
+  <div class="case__media"><div class="quad"><video controls preload="metadata" playsinline muted aria-label="MDD awareness ad 1"><source src="assets/videos/mdd-ad1.mp4#t=0.5" type="video/mp4"></video><video controls preload="metadata" playsinline muted aria-label="MDD awareness ad 2"><source src="assets/videos/mdd-ad2.mp4#t=0.5" type="video/mp4"></video><video controls preload="metadata" playsinline muted aria-label="MDD awareness ad 3"><source src="assets/videos/mdd-ad3.mp4#t=0.5" type="video/mp4"></video><video controls preload="metadata" playsinline muted aria-label="MDD awareness ad 4"><source src="assets/videos/mdd-ad4.mp4#t=0.5" type="video/mp4"></video></div></div>
+</article>
+<article class="wrap case" aria-labelledby="case-6">
+  <div class="case__text">
+    <p class="label accent">Klick Health</p>
+    <h3 class="title" id="case-6">Klick Holiday</h3>
+    <p class="label muted">Clio · Creative Floor</p>
+    <p class="body">Concept, direction, animation and music for Klick Health’s holiday film.</p>
+  </div>
+  <div class="case__media"><video controls preload="none" playsinline poster="assets/images/klick-holiday-poster.jpg"><source src="assets/videos/klick-holiday-v2.mp4" type="video/mp4"></video></div>
+</article>
+</section>
 
-    <!-- HERO -->
-    <section class="hero">
-        <canvas id="truchet-canvas"></canvas>
-        <h1>
-            <span>Jon Toews</span>
-            Creative Director
-        </h1>
-        <p>Award-winning creative direction spanning digital experiences, brand systems, film, short fiction, music, and emerging technology.</p>
-        <div class="scroll-hint">
-            <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                <polyline points="6 9 12 15 18 9"></polyline>
-            </svg>
-        </div>
-    </section>
+<section class="wrap section" aria-labelledby="more-h">
+  <h2 class="label accent full" id="more-h" style="margin-bottom:36px">Additional work</h2>
+  <ol class="index" role="list">
+  <li><div class="row row--plain" style="cursor:default">
+    <span class="i-head"><span class="title i-title">Klick brand &amp; web</span><span class="body i-note">Creative direction of the Klick.com redesign: visual design, UX and interactive storytelling for a site that reflects Klick’s fusion of science, strategy and creativity, built to attract talent and show the culture. <a href="https://www.klick.com/" rel="noopener">Visit ↗</a></span></span>
+    <span class="label i-field">Klick Health</span>
+  </div></li>
+  <li><div class="row row--plain" style="cursor:default">
+    <span class="i-head"><span class="title i-title">NASA digital redesign</span><span class="body i-note">A two-month pitch with speculative concepts and working prototypes that won a ground-up web redesign, then delivery across technology, UX, content and design.</span></span>
+    <span class="label i-field">NASA × Critical Mass</span>
+  </div></li>
+  <li><div class="row row--plain" style="cursor:default">
+    <span class="i-head"><span class="title i-title">Banking of the future</span><span class="body i-note">As global executive creative director, led discovery and prototypes on two horizons, five and ten-plus years out: hyper-personalized marketing, biometrics and predictive intelligence, with pilots in markets worldwide.</span></span>
+    <span class="label i-field">Citi × Critical Mass</span>
+  </div></li>
+  <li><div class="row row--plain" style="cursor:default">
+    <span class="i-head"><span class="title i-title">Corporate brand &amp; Auvelity launch</span><span class="body i-note">Corporate identity and communications system for an emerging CNS biotech, five future-indication assignments, and the design and messaging platform for the Auvelity launch in major depressive disorder.</span></span>
+    <span class="label i-field">Axsome Therapeutics × Klick Health</span>
+  </div></li>
+  <li><div class="row row--plain" style="cursor:default">
+    <span class="i-head"><span class="title i-title">Let the Saving Begin</span><span class="body i-note">Positioning and integrated campaign under the “You’re Richer Than You Think” brand, built to drive saving behaviour and trust.</span></span>
+    <span class="label i-field">Scotiabank × Bensimon Byrne</span>
+  </div></li>
+  <li><div class="row row--plain" style="cursor:default">
+    <span class="i-head"><span class="title i-title">Recycled shoe line platform</span><span class="body i-note">Won and executed a social-responsibility platform for Converse’s recycled shoe line, including branding and internal content for Converse and partners.</span></span>
+    <span class="label i-field">Converse × Public Inc.</span>
+  </div></li>
+  </ol>
+</section>
 
-    <!-- PROJECTS -->
-    <div id="work" class="projects">
-
-        <!-- 1. UNMAS Sweeper -->
-        <div class="project">
-            <div class="project-info">
-                <div class="project-client">UNMAS &times; Critical Mass</div>
-                <h2 class="project-title">Sweeper</h2>
-                <p class="project-desc">This installation is deeply personal and emotional, highlighting the devastating impact of landmines. The virtual minefield exhibit at the New Museum in New York City brought this reality to life. The Sweeper mobile app used iBeacon technology to trigger audio explosions on visitors' phones as they navigated the exhibit, followed by stories of the damage caused and calls to donate to UNMAS.</p>
-                <div class="project-awards">
-                    <svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
-                    Cannes, New York Festival, Communication Arts
-                </div>
-            </div>
-            <div class="project-media">
-                <video controls playsinline preload="metadata" poster="assets/images/sweeper-poster.jpg">
-                    <source src="assets/videos/sweeper.mp4" type="video/mp4">
-                </video>
-            </div>
-        </div>
-
-        <!-- 2. Massey Lectures App -->
-        <div class="project">
-            <div class="project-info">
-                <div class="project-client">House of Anansi &times; Critical Mass</div>
-                <h2 class="project-title">Massey Lectures App</h2>
-                <p class="project-desc">The Massey Lectures Series explores how publishers and cultural institutions can leverage mobile technology for personalized content and social engagement. The Massey Lectures iPad app offers a new way to experience nearly 200 hours of thought-provoking material. Each e-book, paired with its corresponding five-hour audio lecture series, is enhanced with vibrant, contextual content, author interviews, and more.</p>
-                <div class="project-awards">
-                    <svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
-                    Cannes Lion in Design
-                </div>
-            </div>
-            <div class="project-media">
-                <video controls playsinline preload="metadata" poster="assets/images/massey-poster.jpg">
-                    <source src="assets/videos/massey-lectures.mp4" type="video/mp4">
-                </video>
-            </div>
-        </div>
-
-        <!-- 3. Inaccessible Transit Shelter -->
-        <div class="project">
-            <div class="project-info">
-                <div class="project-client">City of Toronto</div>
-                <h2 class="project-title">The Inaccessible Transit Shelter</h2>
-                <p class="project-desc">On behalf of the Centre for Independent Living in Toronto and the City of Toronto, this transit shelter was entirely enclosed in glass so people couldn't get inside. A headline explained: "Feeling left out? Over 400,000 Torontonians with disabilities do, too." A call to action drove people to a website where they could explore ways of making Toronto more accessible.</p>
-                <div class="project-awards">
-                    <svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
-                    Communication Arts, Canadian Marketing
-                </div>
-            </div>
-            <div class="project-media">
-                <img src="assets/images/transit-shelter-new.jpg" alt="The Inaccessible Transit Shelter - glass enclosed bus shelter with headline: Feeling left out?" loading="lazy">
-            </div>
-        </div>
-
-        <!-- 4. Be A Donor -->
-        <div class="project">
-            <div class="project-info">
-                <div class="project-client">Trillium Gift of Life Network</div>
-                <h2 class="project-title">Be A Donor</h2>
-                <p class="project-desc">The Be A Donor campaign was an extremely successful initiative. This is the hyper personal and emotional television ad that accompanied the direct digital campaign to sign up and register online.</p>
-            </div>
-            <div class="project-media">
-                <video controls playsinline preload="metadata" poster="assets/images/be-a-donor-poster.jpg">
-                    <source src="assets/videos/be-a-donor.mp4" type="video/mp4">
-                </video>
-            </div>
-        </div>
-
-        <!-- 5. Axsome Therapeutics - MDD Campaign -->
-        <div class="project project--portrait">
-            <div class="project-info">
-                <div class="project-client">Axsome Therapeutics &times; Klick Health</div>
-                <h2 class="project-title">MDD Awareness Campaign</h2>
-                <p class="project-desc">A disease state awareness campaign for Major Depressive Disorder. These social ads and targeted digital content highlighted the reality for so many patients. They broke through the clutter with eye-popping animations and maximalist illustration styling. We collected data from direct signups and delivered patient brochures and launch information for a new drug therapy from Axsome.</p>
-                <div class="project-awards">
-                    <svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
-                    New York Festival, Communication Arts, Creative Floor
-                </div>
-            </div>
-            <div class="project-media">
-                <div class="mdd-grid">
-                    <div class="mdd-grid-item">
-                        <video autoplay loop muted playsinline>
-                            <source src="assets/videos/mdd-ad1.mp4" type="video/mp4">
-                        </video>
-                        <span class="mdd-label">Ad 1</span>
-                    </div>
-                    <div class="mdd-grid-item">
-                        <video autoplay loop muted playsinline>
-                            <source src="assets/videos/mdd-ad2.mp4" type="video/mp4">
-                        </video>
-                        <span class="mdd-label">Ad 2</span>
-                    </div>
-                    <div class="mdd-grid-item">
-                        <video autoplay loop muted playsinline>
-                            <source src="assets/videos/mdd-ad3.mp4" type="video/mp4">
-                        </video>
-                        <span class="mdd-label">Ad 3</span>
-                    </div>
-                    <div class="mdd-grid-item">
-                        <video autoplay loop muted playsinline>
-                            <source src="assets/videos/mdd-ad4.mp4" type="video/mp4">
-                        </video>
-                        <span class="mdd-label">Ad 4</span>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- 6. Klick Brand and Web -->
-        <div class="project">
-            <div class="project-info">
-                <div class="project-client">Klick Health</div>
-                <h2 class="project-title">Klick Brand &amp; Web</h2>
-                <p class="project-desc">As creative director for the Klick.com redesign, I led the evolution of the site into a bold, immersive experience that reflects Klick's unique fusion of science, strategy, and creativity. I oversaw visual design, UX, and interactive storytelling to create a site that's both striking and strategically aligned with Klick's human-centric approach to healthcare.</p>
-                <a href="https://www.klick.com/" target="_blank" rel="noopener" class="project-link-btn">Visit Klick.com ↗</a>
-            </div>
-            <div class="project-media" style="cursor: pointer;" onclick="window.open('https://www.klick.com/','_blank')">
-                <div class="klick-hero-img">
-                    <div class="klick-logo">kli<br>ck</div>
-                    <div class="blue-circle">
-                        <div class="tagline">There's something<br>different here.</div>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- 7. Klick Holiday -->
-        <div class="project">
-            <div class="project-info">
-                <div class="project-client">Klick Health</div>
-                <h2 class="project-title">Klick Holiday</h2>
-                <p class="project-desc">Showing my director chops in animation, music and concept, this holiday video for Klick Health won awards at Creative Floor and the Clios.</p>
-                <div class="project-awards">
-                    <svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
-                    Creative Floor, Clios
-                </div>
-            </div>
-            <div class="project-media">
-                <video controls playsinline preload="metadata" poster="assets/images/klick-holiday-poster.jpg">
-                    <source src="assets/videos/klick-holiday-v2.mp4" type="video/mp4">
-                </video>
-            </div>
-        </div>
-
-    </div>
-
-    <div class="divider"><hr></div>
-
-    <!-- MORE PROJECTS -->
-    <div id="more" class="logo-projects">
-        <h2>Additional Work</h2>
-        <div class="logo-grid">
-
-            <div class="logo-card">
-                <div class="brand-icon" style="color: #0051a5;">NASA</div>
-                <h3>NASA Digital Redesign</h3>
-                <p>Over a two month pitch process that included speculative concepts and working prototypes, I helped Critical Mass land a massive web redesign project from the ground up and then helped execute and implement everything from tech, UX, content, and design.</p>
-            </div>
-
-            <div class="logo-card">
-                <div class="brand-icon" style="color: #003DA5;">citi</div>
-                <h3>Banking of the Future</h3>
-                <p>Imagining and prototyping banking in the future with two tracks — one five years out and one ten-plus years out. These concepts included hyper personalized marketing with facial recognition, biometrics and predictive intelligence. Many were piloted worldwide.</p>
-            </div>
-
-            <div class="logo-card">
-                <div class="brand-icon">axsome</div>
-                <h3>Axsome Corporate Redesign</h3>
-                <p>Won five future indication marketing projects and a corporate redesign for an emerging biotech company. We won on the strength of our tech, creative, social and CRM integration strategies and concepts.</p>
-            </div>
-
-        </div>
-    </div>
-
-    <!-- CONTACT -->
-    <section id="contact" class="contact">
-        <div class="section-label">Get in Touch</div>
-        <p>Other portfolio highlights available on request.</p>
-        <p>I'd love to hear from you about new projects,<br>creative collaborations, or opportunities.</p>
-        <a href="mailto:jontoews@gmail.com" class="email-link">jontoews@gmail.com</a>
-    </section>
-
-    <!-- FOOTER -->
-    <footer>
-        <p>Jon Toews &mdash; 2025</p>
-    </footer>
-
-    <!-- SCRIPTS -->
-    <script>
-        const observer = new IntersectionObserver((entries) => {
-            entries.forEach(entry => {
-                if (entry.isIntersecting) {
-                    entry.target.classList.add('visible');
-                }
-            });
-        }, {
-            threshold: 0.15,
-            rootMargin: '0px 0px -50px 0px'
-        });
-
-        document.querySelectorAll('.project, .logo-card').forEach(el => {
-            observer.observe(el);
-        });
-
-        // Truchet tile animation
-        (function() {
-            const canvas = document.getElementById('truchet-canvas');
-            const ctx = canvas.getContext('2d');
-            const TILE = 60;
-            let cols, rows, tiles;
-            let lastTime = 0;
-
-            // Color palette: accent pink, purple, cyan, white
-            const COLORS = ['#ff1f71', '#c026d3', '#7858ff', '#06b6d4', '#ffffff'];
-
-            function resize() {
-                canvas.width = canvas.offsetWidth;
-                canvas.height = canvas.offsetHeight;
-                cols = Math.ceil(canvas.width / TILE) + 1;
-                rows = Math.ceil(canvas.height / TILE) + 1;
-                tiles = [];
-                for (let r = 0; r < rows; r++) {
-                    tiles[r] = [];
-                    for (let c = 0; c < cols; c++) {
-                        const colorIdx = Math.floor(Math.random() * COLORS.length);
-                        const nextColorIdx = (colorIdx + 1 + Math.floor(Math.random() * (COLORS.length - 1))) % COLORS.length;
-                        tiles[r][c] = {
-                            angle: Math.random() < 0.5 ? 0 : Math.PI / 2,
-                            target: Math.random() < 0.5 ? 0 : Math.PI / 2,
-                            progress: Math.random(),
-                            flipProgress: 0,
-                            flipping: false,
-                            speed: 0.0004 + Math.random() * 0.0006,
-                            colorIdx,
-                            nextColorIdx,
-                            delay: Math.random() * 5000,
-                            lineWidth: 1 + Math.random() * 2,
-                        };
-                    }
-                }
-            }
-
-            function lerpColor(a, b, t) {
-                const ah = parseInt(a.slice(1), 16);
-                const bh = parseInt(b.slice(1), 16);
-                const ar = (ah >> 16) & 0xff, ag = (ah >> 8) & 0xff, ab = ah & 0xff;
-                const br = (bh >> 16) & 0xff, bg = (bh >> 8) & 0xff, bb = bh & 0xff;
-                const rr = Math.round(ar + (br - ar) * t);
-                const rg = Math.round(ag + (bg - ag) * t);
-                const rb = Math.round(ab + (bb - ab) * t);
-                return `rgb(${rr},${rg},${rb})`;
-            }
-
-            function drawTile(x, y, angle, color, lw) {
-                ctx.save();
-                ctx.translate(x + TILE / 2, y + TILE / 2);
-                ctx.rotate(angle);
-                ctx.strokeStyle = color;
-                ctx.lineWidth = lw;
-                ctx.lineCap = 'round';
-                ctx.beginPath();
-                ctx.arc(-TILE / 2, -TILE / 2, TILE / 2, 0, Math.PI / 2);
-                ctx.stroke();
-                ctx.beginPath();
-                ctx.arc(TILE / 2, TILE / 2, TILE / 2, Math.PI, Math.PI * 1.5);
-                ctx.stroke();
-                ctx.restore();
-            }
-
-            function easeInOut(t) {
-                return t < 0.5 ? 2 * t * t : -1 + (4 - 2 * t) * t;
-            }
-
-            function draw(ts) {
-                const dt = Math.min(ts - lastTime, 50); // cap dt to avoid jumps
-                lastTime = ts;
-
-                ctx.clearRect(0, 0, canvas.width, canvas.height);
-
-                for (let r = 0; r < rows; r++) {
-                    for (let c = 0; c < cols; c++) {
-                        const t = tiles[r][c];
-
-                        if (ts > t.delay) {
-                            t.progress += t.speed * dt;
-                            if (t.progress >= 1) {
-                                t.progress = 0;
-                                t.angle = t.target;
-                                t.target = t.angle === 0 ? Math.PI / 2 : 0;
-                                // shift to next color
-                                t.colorIdx = t.nextColorIdx;
-                                t.nextColorIdx = (t.colorIdx + 1 + Math.floor(Math.random() * (COLORS.length - 1))) % COLORS.length;
-                                t.delay = ts + 500 + Math.random() * 6000;
-                            }
-                        }
-
-                        const eased = easeInOut(Math.min(t.progress, 1));
-                        const displayAngle = t.angle + (t.target - t.angle) * eased;
-                        const color = lerpColor(COLORS[t.colorIdx], COLORS[t.nextColorIdx], eased);
-
-                        drawTile(c * TILE, r * TILE, displayAngle, color, t.lineWidth);
-                    }
-                }
-
-                requestAnimationFrame(draw);
-            }
-
-            resize();
-            window.addEventListener('resize', resize);
-            requestAnimationFrame((ts) => { lastTime = ts; requestAnimationFrame(draw); });
-        })();
-
-        // Smooth nav background on scroll
-        window.addEventListener('scroll', () => {
-            const nav = document.querySelector('nav');
-            nav.style.borderBottomColor = window.scrollY > 50 ? '#333' : '#222';
-        });
-    </script>
-
+<section class="wrap section" id="contact" aria-labelledby="contact-h">
+  <h2 class="label muted contact__label" id="contact-h">Contact</h2>
+  <div class="contact__text">
+    <p class="body">Thanks for taking a look. I’m happy to walk through any of this work in more detail, or to share more on request.</p>
+    <p class="body"><a class="email" href="mailto:jontoews@gmail.com">jontoews@gmail.com</a></p>
+  </div>
+</section>
+</main>
+<footer class="wrap site-foot">
+  <p class="label muted a">© 2026 Jon Toews</p>
+</footer>
+<script src="../assets/js/moire.js?v=f6622097" defer></script>
+<script src="../assets/js/stretch.js?v=c0a21fcd" defer></script>
 </body>
 </html>
